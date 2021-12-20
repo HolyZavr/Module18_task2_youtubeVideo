@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Module18_task2_youtubeVideo
 {
-    abstract class Operations
+    interface ICommand
     {
-        abstract public void GetInformation();
-        abstract public void DownloadVideo();
+
     }
 }

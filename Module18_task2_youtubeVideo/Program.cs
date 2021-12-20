@@ -25,19 +25,27 @@ namespace Module18_task2_youtubeVideo
 
                     var title = video.Title;
                     var author = video.Author.Title;
-                    var discription = video.Description;
-                    var duration = video.Duration;
 
-                    Console.WriteLine($"Информация о видео: ");
-                    Console.WriteLine($"Название: '{title}' | Автор: {author} | Продолжительность {duration}");
-                    Console.WriteLine($"Описание: {discription}");
+                    Console.WriteLine($"\nИнформация о видео: ");
+                    Console.WriteLine($"\nНазвание: '{title}' || Автор: {author} || Продолжительность: {video.Duration}");
+                    Console.WriteLine($"\nОписание: {video.Description}");
 
-                    await youtube.Videos.DownloadAsync(pathToVideo, $"{pathToFolder}/{author}-{title}.mp4", o => o
+                    var baseVideoName = author +"-"+ title; 
+                    var unwantedChars = new string[] {":", "|"};
+
+                    foreach (var ch in unwantedChars)
+                    {
+                        baseVideoName = baseVideoName.Replace(ch, string.Empty);
+                    }
+
+                    if (baseVideoName.Length > 30) baseVideoName.Substring(0, 25);
+
+                    await youtube.Videos.DownloadAsync(pathToVideo, $"{pathToFolder}/{baseVideoName.Substring(0, 25)}.mp4", o => o
                     .SetPreset(ConversionPreset.UltraFast));
 
-                    Console.WriteLine("\nВидео загружено!\n");
+                    Console.WriteLine("\n\nВидео загружено!\n\n\n");
                 }
-                catch (System.ArgumentException ex)
+                catch (System.ArgumentException)
                 {
                     Console.WriteLine("\nНе корректный URL видео\n");
                 }
