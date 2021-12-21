@@ -8,6 +8,6 @@ namespace Module18_task2_youtubeVideo
 {
     interface ICommand
     {
-
+        public abstract void Execute(string videoUrl);
     }
 }
