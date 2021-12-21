@@ -24,24 +24,31 @@ namespace Module18_task2_youtubeVideo
 
         public async Task DownloadVideo(string videoUrl)
         {
-            string pathToFolder = @"C:\Users\stolb\Desktop\videos"; // место куда сохранять
-            if (!Directory.Exists(pathToFolder)) Directory.CreateDirectory(pathToFolder);
-
-            var youtube = new YoutubeClient();
-            var video = await youtube.Videos.GetAsync(videoUrl);
-
-            var baseVideoName = video.Author.Title + "-" + video.Title;
-            var unwantedChars = new string[] { ":", "|" };
-
-            foreach (var ch in unwantedChars)
+            try
             {
-                baseVideoName = baseVideoName.Replace(ch, string.Empty);
+                string pathToFolder = @"C:\Users\stolb\Desktop\videos"; // место куда сохранять
+                if (!Directory.Exists(pathToFolder)) Directory.CreateDirectory(pathToFolder);
+
+                var youtube = new YoutubeClient();
+                var video = await youtube.Videos.GetAsync(videoUrl);
+
+                var baseVideoName = video.Author.Title + "-" + video.Title;
+                var unwantedChars = new string[] { ":", "|" };
+
+                foreach (var ch in unwantedChars)
+                {
+                    baseVideoName = baseVideoName.Replace(ch, string.Empty);
+                }
+
+                await youtube.Videos.DownloadAsync(videoUrl, $"{pathToFolder}/{baseVideoName.Substring(0, 25)}.mp4", o => o
+                .SetPreset(ConversionPreset.UltraFast));
+
+                Console.WriteLine("\n\nВидео загружено!\n\n\n");
             }
-
-            await youtube.Videos.DownloadAsync(videoUrl, $"{pathToFolder}/{baseVideoName.Substring(0, 25)}.mp4", o => o
-            .SetPreset(ConversionPreset.UltraFast));
-
-            Console.WriteLine("\n\nВидео загружено!\n\n\n");
+            catch (Exception)
+            {
+                Console.WriteLine("Не корректный URL видео");
+            }
         }
     }
 }
